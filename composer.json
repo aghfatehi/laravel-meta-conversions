@@ -1,0 +1,57 @@
+{
+    "name": "aghfatehi/laravel-meta-conversions",
+    "description": "Laravel package for Facebook Pixel and Meta Conversion API (CAPI) with event deduplication, queue support, and ecommerce tracking.",
+    "type": "library",
+    "license": "MIT",
+    "homepage": "https://fsoftdev.com",
+    "support": {
+        "issues": "https://github.com/aghfatehi/laravel-meta-conversions/issues",
+        "source": "https://github.com/aghfatehi/laravel-meta-conversions",
+        "email": "support@fsoftdev.com"
+    },
+    "authors": [
+        {
+            "name": "AL-Aghbari Fatehi",
+            "homepage": "https://fsoftdev.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^10.0 || ^11.0 || ^12.0",
+        "illuminate/http": "^10.0 || ^11.0 || ^12.0",
+        "illuminate/bus": "^10.0 || ^11.0 || ^12.0",
+        "illuminate/view": "^10.0 || ^11.0 || ^12.0",
+        "ramsey/uuid": "^4.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0 || ^9.0 || ^10.0",
+        "pestphp/pest": "^3.0",
+        "mockery/mockery": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aghfatehi\\LaravelMetaConversions\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Aghfatehi\\LaravelMetaConversions\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Aghfatehi\\LaravelMetaConversions\\FacebookConversionServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable"
+}
