@@ -36,12 +36,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require \
-            "illuminate/support:^${{ matrix.laravel }}" \
-            "illuminate/http:^${{ matrix.laravel }}" \
-            "illuminate/bus:^${{ matrix.laravel }}" \
-            "illuminate/view:^${{ matrix.laravel }}" \
-            --no-interaction --no-update
+          composer require "laravel/framework:^${{ matrix.laravel }}" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction --no-progress
 
       - name: Run tests
