@@ -1,25 +1,22 @@
 <?php
 
-use Aghfatehi\LaravelMetaConversions\Facades\FacebookConversion;
-use Aghfatehi\LaravelMetaConversions\View\Components\Pixel;
-
 it('renders pixel component with pixel id', function () {
     config()->set('facebook-conversion-service.pixel_id', 'TEST_PIXEL_123');
     config()->set('facebook-conversion-service.enabled', true);
 
-    $view = $this->component(Pixel::class);
+    $html = view('facebook-conversion::pixel')->render();
 
-    $view->assertSee('fbq("init", "TEST_PIXEL_123")', false);
-    $view->assertSee('fbq("track", "PageView")', false);
+    expect($html)->toContain('fbq("init", "TEST_PIXEL_123")');
+    expect($html)->toContain('fbq("track", "PageView")');
 });
 
 it('does not render pixel when disabled', function () {
     config()->set('facebook-conversion-service.pixel_id', 'TEST_PIXEL_123');
     config()->set('facebook-conversion-service.enabled', false);
 
-    $view = $this->component(Pixel::class);
+    $html = view('facebook-conversion::pixel')->render();
 
-    $view->assertDontSee('fbq');
+    expect($html)->not->toContain('fbq');
 });
 
 it('renders pixel view via include', function () {
