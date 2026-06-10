@@ -1,0 +1,24 @@
+name: Code Style
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  php-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          coverage: none
+
+      - name: PHP Syntax Check
+        run: find src config tests -name "*.php" -exec php -l {} \;

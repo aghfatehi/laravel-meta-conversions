@@ -219,7 +219,6 @@ class FacebookConversionService implements FacebookConversionServiceContract
                 'content_type' => $builder->contentType($value),
                 'content_name' => $builder->contentName($value),
                 'content_category' => $builder->contentCategory($value),
-                'content_name' => $builder->contentName($value),
                 'quantity' => $builder->quantity((int) $value),
                 'search_string' => $builder->searchString($value),
                 'status' => $builder->status($value),
