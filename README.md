@@ -3,7 +3,7 @@
 <a href="https://packagist.org/packages/aghfatehi/laravel-meta-conversions"><img src="https://img.shields.io/packagist/v/aghfatehi/laravel-meta-conversions.svg?style=flat-square&label=Latest" alt="Latest Version"></a>
 <a href="https://packagist.org/packages/aghfatehi/laravel-meta-conversions"><img src="https://img.shields.io/packagist/php-v/aghfatehi/laravel-meta-conversions.svg?style=flat-square" alt="PHP Version"></a>
 <a href="https://github.com/aghfatehi/laravel-meta-conversions/actions"><img src="https://img.shields.io/github/actions/workflow/status/aghfatehi/laravel-meta-conversions/tests.yml?style=flat-square&label=Tests" alt="Tests"></a>
-<a href="LICENSE"><img src="https://img.shields.io/packagist/l/aghfatehi/laravel-meta-conversions.svg?style=flat-square" alt="License"></a>
+<a href="LICENSE"><img src="https://img.shields.io/github/license/aghfatehi/laravel-meta-conversions?style=flat-square" alt="License"></a>
 </p>
 
 ---
