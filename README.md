@@ -10,6 +10,8 @@
 
 # Laravel Meta Conversions — Meta Pixel & Facebook CAPI Package
 
+> The complete Meta Pixel & Facebook Conversions API solution for Laravel.
+
 **Laravel Meta Conversions** is a complete **Meta Pixel Laravel Package** and **Facebook Pixel Laravel Package** that integrates **Laravel Facebook Pixel** browser tracking with **Laravel Meta Conversions API (CAPI)** server-side tracking. It delivers accurate **Server Side Tracking Laravel** for reliable **Meta Conversion Tracking** and **Facebook Conversion Tracking** across your entire ecommerce funnel.
 
 > **Goal**: High-precision **Laravel Ecommerce Tracking** with event deduplication via unified `event_id` across browser + server for maximum **Meta Advanced Matching** quality. Built for **Laravel Marketing Analytics** and data-driven ad optimization.
