@@ -5,7 +5,6 @@ use Aghfatehi\LaravelMetaConversions\Exceptions\InvalidConfigException;
 use Aghfatehi\LaravelMetaConversions\Services\MetaConversionApiClient;
 use Illuminate\Http\Client\Factory as HttpClient;
 use Illuminate\Http\Client\Response;
-use GuzzleHttp\Psr7\Response as Psr7Response;
 
 beforeEach(function () {
     config()->set('facebook-conversion-service.pixel_id', '123456');
@@ -30,17 +29,20 @@ it('validates configuration and throws on missing access token', function () {
 });
 
 it('sends event via http client', function () {
-    $http = app(HttpClient::class);
+    $response = Mockery::mock(Response::class);
+    $response->shouldReceive('json')->andReturn(['events_received' => 1]);
+    $response->shouldReceive('failed')->andReturn(false);
+
+    $pending = Mockery::mock(stdClass::class);
+    $pending->shouldReceive('retry')->andReturn($pending);
+    $pending->shouldReceive('asJson')->andReturn($pending);
+    $pending->shouldReceive('post')->andReturn($response);
+
+    $http = Mockery::mock(HttpClient::class);
+    $http->shouldReceive('timeout')->andReturn($pending);
+
     $client = new MetaConversionApiClient($http);
-
-    $event = new ConversionEvent(
-        eventName: 'PageView',
-        eventId: 'test-id',
-    );
-
-    Http::fake([
-        'graph.facebook.com/*' => Http::response(['events_received' => 1], 200),
-    ]);
+    $event = new ConversionEvent(eventName: 'PageView', eventId: 'test-id');
 
     $result = $client->sendEvent($event);
 
@@ -48,19 +50,23 @@ it('sends event via http client', function () {
 });
 
 it('throws exception on api failure', function () {
-    $http = app(HttpClient::class);
-    $client = new MetaConversionApiClient($http);
-
-    $event = new ConversionEvent(
-        eventName: 'PageView',
-        eventId: 'test-id',
-    );
-
-    Http::fake([
-        'graph.facebook.com/*' => Http::response([
-            'error' => ['message' => 'Invalid token'],
-        ], 401),
+    $response = Mockery::mock(Response::class);
+    $response->shouldReceive('json')->andReturn([
+        'error' => ['message' => 'Invalid token'],
     ]);
+    $response->shouldReceive('failed')->andReturn(true);
+    $response->shouldReceive('status')->andReturn(401);
+
+    $pending = Mockery::mock(stdClass::class);
+    $pending->shouldReceive('retry')->andReturn($pending);
+    $pending->shouldReceive('asJson')->andReturn($pending);
+    $pending->shouldReceive('post')->andReturn($response);
+
+    $http = Mockery::mock(HttpClient::class);
+    $http->shouldReceive('timeout')->andReturn($pending);
+
+    $client = new MetaConversionApiClient($http);
+    $event = new ConversionEvent(eventName: 'PageView', eventId: 'test-id');
 
     expect(fn () => $client->sendEvent($event))
         ->toThrow(\Aghfatehi\LaravelMetaConversions\Exceptions\FacebookConversionException::class);
@@ -69,41 +75,53 @@ it('throws exception on api failure', function () {
 it('includes test event code when configured', function () {
     config()->set('facebook-conversion-service.test_event_code', 'TEST123');
 
-    $http = app(HttpClient::class);
+    $response = Mockery::mock(Response::class);
+    $response->shouldReceive('json')->andReturn(['events_received' => 1]);
+    $response->shouldReceive('failed')->andReturn(false);
+
+    $body = null;
+    $pending = Mockery::mock(stdClass::class);
+    $pending->shouldReceive('retry')->andReturn($pending);
+    $pending->shouldReceive('asJson')->andReturn($pending);
+    $pending->shouldReceive('post')->with(
+        Mockery::any(),
+        Mockery::capture($body),
+    )->andReturn($response);
+
+    $http = Mockery::mock(HttpClient::class);
+    $http->shouldReceive('timeout')->andReturn($pending);
+
     $client = new MetaConversionApiClient($http);
-
-    $event = new ConversionEvent(
-        eventName: 'PageView',
-        eventId: 'test-id',
-    );
-
-    Http::fake(function ($request) {
-        $body = $request->data();
-
-        expect($body['test_event_code'])->toBe('TEST123');
-
-        return Http::response(['events_received' => 1], 200);
-    });
+    $event = new ConversionEvent(eventName: 'PageView', eventId: 'test-id');
 
     $client->sendEvent($event);
+
+    expect($body['test_event_code'])->toBe('TEST123');
 });
 
 it('uses configured api version', function () {
     config()->set('facebook-conversion-service.api_version', 'v22.0');
 
-    $http = app(HttpClient::class);
+    $response = Mockery::mock(Response::class);
+    $response->shouldReceive('json')->andReturn(['events_received' => 1]);
+    $response->shouldReceive('failed')->andReturn(false);
+
+    $url = null;
+    $pending = Mockery::mock(stdClass::class);
+    $pending->shouldReceive('retry')->andReturn($pending);
+    $pending->shouldReceive('asJson')->andReturn($pending);
+    $pending->shouldReceive('post')->with(
+        Mockery::capture($url),
+        Mockery::any(),
+    )->andReturn($response);
+
+    $http = Mockery::mock(HttpClient::class);
+    $http->shouldReceive('timeout')->andReturn($pending);
+
     $client = new MetaConversionApiClient($http);
-
-    $event = new ConversionEvent(
-        eventName: 'PageView',
-        eventId: 'test-id',
-    );
-
-    Http::fake(function ($request) {
-        expect($request->url())->toContain('v22.0');
-
-        return Http::response(['events_received' => 1], 200);
-    });
+    $event = new ConversionEvent(eventName: 'PageView', eventId: 'test-id');
 
     $client->sendEvent($event);
+
+    expect($url)->toContain('v22.0');
 });
